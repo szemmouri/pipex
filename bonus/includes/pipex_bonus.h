@@ -6,7 +6,7 @@
 /*   By: szemmour <szemmour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 19:38:47 by szemmour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:10:02 by szemmour         ###   ########.fr       */
+/*   Updated: 2025/03/03 10:45:10 by szemmour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ void				dup_file(t_fd *fd_t, int fd);
 void				push_back(t_cmd **lst, char **command);
 
 // ================= Here_doc =========================
-void				here_doc(char *limiter);
+int					here_doc(char *limiter);
 
 #endif

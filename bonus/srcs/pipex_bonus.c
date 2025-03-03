@@ -6,7 +6,7 @@
 /*   By: szemmour <szemmour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 19:38:44 by szemmour          #+#    #+#             */
-/*   Updated: 2025/02/25 15:57:56 by szemmour         ###   ########.fr       */
+/*   Updated: 2025/03/03 11:43:53 by szemmour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,18 @@ static void	wait_childern(t_cmd *cmds)
 
 static void	ft_pipe(t_cmd *cmds, t_fd *fd, char **envp)
 {
-	t_cmd	*current;
+	t_cmd	*cmds_head;
 
-	current = cmds;
-	while (current)
+	cmds_head = cmds;
+	while (cmds)
 	{
 		if (pipe(fd->fd) == -1)
 			put_perror("pipe", fd, cmds);
-		current->pid = fork();
-		if (current->pid == -1)
+		cmds->pid = fork();
+		if (cmds->pid == -1)
 			put_perror("fork", fd, cmds);
-		if (current->pid == 0)
-			child_process(fd, current, envp);
+		if (cmds->pid == 0)
+			child_process(fd, cmds, envp);
 		else
 		{
 			close(fd->fd[1]);
@@ -108,9 +108,9 @@ static void	ft_pipe(t_cmd *cmds, t_fd *fd, char **envp)
 				close(fd->fd[0]);
 			fd->in = fd->fd[0];
 		}
-		current = current->next;
+		cmds = cmds->next;
 	}
-	wait_childern(cmds);
+	wait_childern(cmds_head);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -122,7 +122,7 @@ int	main(int argc, char **argv, char **envp)
 		return (ft_putendl_fd("Usage: ./pipex file1 cmd1 cmd2 ... file2", 2),
 			1);
 	if (ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1])) == 0)
-		here_doc(argv[2]);
+		here_doc(ft_strjoin(argv[2], "\n"));
 	init_vars(&fd, argv[1], argv[argc - 1]);
 	cmds = get_cmd(argv, argc);
 	if (!cmds)
